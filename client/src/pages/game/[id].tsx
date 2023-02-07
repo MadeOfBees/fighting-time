@@ -1,21 +1,28 @@
 import React from "react";
 import { useRouter } from "next/router";
-import Game from "@/Components/game";
-
+import Game from "@/Components/game/game";
 
 export default function GamePage() {
-    const [time, setTime] = React.useState(2);
-    
-    React.useEffect(() => {
-        const interval = setInterval(() => {
-            setTime(time - 1);
-        }, 1000);
-        return () => clearInterval(interval);
-    }, [time]);
+  const [progress, setProgress] = React.useState(0);
 
-    return (
-        <div>
-            {time > 0 ? <h1>Loading...</h1> : <Game />}
-        </div>
-    );
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress(progress + 1);
+    }, 10);
+    return () => clearInterval(interval);
+  }, [progress]);
+
+  return (
+    <div className="flex flex-col flex-wrap justify-center items-center mt-10">
+      {progress < 100 ? (
+        <progress
+          className="progress progress-primary w-56 mt-28"
+          value={progress}
+          max="100"
+        ></progress>
+      ) : (
+        <Game />
+      )}
+    </div>
+  );
 }

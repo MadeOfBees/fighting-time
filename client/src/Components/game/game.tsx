@@ -1,5 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
+import RenderLine from "@/Components/game/renderLine";
 
 interface BoardSquare {
   id: string;
@@ -13,8 +14,8 @@ type GameBoard = BoardSquare[][];
 export default function Game() {
   const router = useRouter();
   const { id } = router.query;
-
   const [gameBoard, setGameBoard] = React.useState<GameBoard>([]);
+  const [progress, setProgress] = React.useState(0);
   const colors = ["red", "blue", "green", "yellow", "purple", "orange"];
 
   async function makeBoard() {
@@ -43,30 +44,18 @@ export default function Game() {
 
   return (
     <div className="flex flex-col flex-wrap justify-center items-center mt-10">
-      <div className="flex flex-row-reverse">
-        {gameBoard[0]?.map((square) => (
-          <div
-            key={square.id}
-            className={`w-20 h-40 ${
-              square.gameObj.value === null
-                ? "bg-white"
-                : colors[Number(square.gameObj.value)]
-            }`}
-          ></div>
-        ))}
-      </div>
-      <div className="flex flex-row-reverse">
-        {gameBoard[1]?.map((square) => (
-          <div
-            key={square.id}
-            className={`w-20 h-40 ${
-              square.gameObj.value === null
-                ? "bg-white"
-                : colors[Number(square.gameObj.value)]
-            }`}
-          ></div>
-        ))}
-      </div>
+      {gameBoard.length > 0 ? (
+        <div>
+          <RenderLine line={gameBoard[0]} colors={colors} />
+          <RenderLine line={gameBoard[1]} colors={colors} />
+          </div>
+      ) : (
+        <progress
+          className="progress progress-primary w-56"
+          value={progress}
+          max="100"
+        ></progress>      
+      )}
     </div>
   );
 }
